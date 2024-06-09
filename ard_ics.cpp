@@ -1,6 +1,6 @@
 #include "ard_ics.h"
 
-ard_ics::ard_ics(int tx_pin) {
+ard_ics::ard_ics(uint8_t tx_pin) {
   Serial1.begin(115200, SERIAL_8E1, -1, tx_pin);
   while(!Serial1) delay(1);
 }

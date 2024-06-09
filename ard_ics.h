@@ -5,7 +5,7 @@
 
 class ard_ics {
 public:
-  ard_ics(int tx_pin);
+  ard_ics(uint8_t tx_pin);
   void set_pos(unsigned char id, int pos);
 
 private:
