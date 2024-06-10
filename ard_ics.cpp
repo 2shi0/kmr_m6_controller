@@ -6,7 +6,7 @@ ard_ics::ard_ics(uint8_t tx_pin) {
 }
 
 void ard_ics::set_pos(unsigned char id, int pos) {
-  if (pos < 3500 || pos > 11500) return;
+  pos = constrain(pos, 3500, 11500);
 
   tx[0] = 0x80 | id;
   tx[1] = (unsigned char)(pos >> 7 & 0x7F);
