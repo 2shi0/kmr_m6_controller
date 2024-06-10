@@ -15,6 +15,7 @@ public:
   ble_uart();
   void init(char *device_name);
   void task_create();
+  bool get_deviceConnected();
 
 private:
   BLEServer *pServer = NULL;

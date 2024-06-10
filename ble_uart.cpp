@@ -83,3 +83,7 @@ void ble_uart::task_create() {
     },
     "ble_task", 4096, this, 1, NULL);
 }
+
+bool ble_uart::get_deviceConnected() {
+  return deviceConnected;
+}

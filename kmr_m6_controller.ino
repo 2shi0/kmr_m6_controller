@@ -1,4 +1,5 @@
 #include <Adafruit_NeoPixel.h>
+
 #include "ard_ics.h"
 #include "ble_uart.h"
 
@@ -13,27 +14,25 @@ void setup() {
 
   pixels.begin();
 
-  ble.init("kmr-m6-1");
+  ble.init("kmr-m6-01");
   ble.task_create();
 }
 
 void loop() {
   // 接続チェック＆LED表示
   while (1) {
-    /*
-    if (!deviceConnected) {
+    if (ble.get_deviceConnected()) {
+      pixels.setPixelColor(0, pixels.Color(0, 255, 0));
+      pixels.show();
+      break;
+    } else {
       pixels.setPixelColor(0, pixels.Color(0, 0, 0));
       pixels.show();
       delay(100);
       pixels.setPixelColor(0, pixels.Color(0, 0, 255));
       pixels.show();
       delay(100);
-    } else {
-      pixels.setPixelColor(0, pixels.Color(0, 255, 0));
-      pixels.show();
-      break;
     }
-    */
   }
   ics.set_pos(6, 5000);
   delay(1000);
