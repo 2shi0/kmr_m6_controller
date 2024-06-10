@@ -59,7 +59,7 @@ void ble_uart::init(char *device_name) {
   pServer->getAdvertising()->start();
 }
 
-void ble_uart::ble_task() {
+void ble_uart::task() {
   while (1) {
     // disconnecting
     if (!deviceConnected && oldDeviceConnected) {
@@ -74,14 +74,6 @@ void ble_uart::ble_task() {
       oldDeviceConnected = deviceConnected;
     }
   }
-}
-
-void ble_uart::task_create() {
-  xTaskCreate(
-    [](void *this_pointer) {
-      static_cast<ble_uart *>(this_pointer)->ble_task();
-    },
-    "ble_task", 4096, this, 1, NULL);
 }
 
 bool ble_uart::get_deviceConnected() {

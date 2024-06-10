@@ -5,16 +5,16 @@
 #include <BLEServer.h>
 #include <BLEUtils.h>
 #include <BLE2902.h>
+#include "task_maker.h"
 
 #define SERVICE_UUID "f087f937-bb08-4803-a85c-7f68aaea5cec"
 #define CHARACTERISTIC_UUID_RX "f087f938-bb08-4803-a85c-7f68aaea5cec"
 #define CHARACTERISTIC_UUID_TX "f087f939-bb08-4803-a85c-7f68aaea5cec"
 
-class ble_uart {
+class ble_uart : public task_maker {
 public:
   ble_uart();
   void init(char *device_name);
-  void task_create();
   bool get_deviceConnected();
 
 private:
@@ -30,7 +30,7 @@ private:
     void onWrite(BLECharacteristic *pCharacteristic);
   };
 
-  void ble_task();
+  void task();
 };
 
 #endif
