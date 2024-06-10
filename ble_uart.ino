@@ -27,7 +27,6 @@
 BLEServer *pServer = NULL;
 BLECharacteristic *pTxCharacteristic;
 bool oldDeviceConnected = false;
-uint8_t txValue = 0;
 
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
@@ -63,8 +62,8 @@ class MyCallbacks : public BLECharacteristicCallbacks {
   }
 };
 
-void ble_init() {
-  BLEDevice::init("UART Service");
+void ble_init(char *device_name) {
+  BLEDevice::init(device_name);
 
   // Create the BLE Server
   pServer = BLEDevice::createServer();
@@ -96,13 +95,6 @@ void ble_init() {
 
 void ble_task(void *arg) {
   while (1) {
-    if (deviceConnected) {
-      pTxCharacteristic->setValue(&txValue, 1);
-      pTxCharacteristic->notify();
-      txValue++;
-      vTaskDelay(10 / portTICK_RATE_MS);  // bluetooth stack will go into congestion, if too many packets are sent
-    }
-
     // disconnecting
     if (!deviceConnected && oldDeviceConnected) {
       vTaskDelay(500 / portTICK_RATE_MS);  // give the bluetooth stack the chance to get things ready
