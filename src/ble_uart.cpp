@@ -3,17 +3,21 @@
 bool deviceConnected;
 bool oldDeviceConnected;
 
-ble_uart::ble_uart() {
+ble_uart::ble_uart()
+{
 }
-void ble_uart::MyServerCallbacks::onConnect(BLEServer *pServer) {
+void ble_uart::MyServerCallbacks::onConnect(BLEServer *pServer)
+{
   deviceConnected = true;
 }
 
-void ble_uart::MyServerCallbacks::onDisconnect(BLEServer *pServer) {
+void ble_uart::MyServerCallbacks::onDisconnect(BLEServer *pServer)
+{
   deviceConnected = false;
 }
 
-void ble_uart::MyCallbacks::onWrite(BLECharacteristic *pCharacteristic) {
+void ble_uart::MyCallbacks::onWrite(BLECharacteristic *pCharacteristic)
+{
   std::string rxValue = pCharacteristic->getValue();
 
   /*
@@ -29,7 +33,8 @@ void ble_uart::MyCallbacks::onWrite(BLECharacteristic *pCharacteristic) {
   */
 }
 
-void ble_uart::init(char *device_name) {
+void ble_uart::init(char *device_name)
+{
   BLEDevice::init(device_name);
 
   // Create the BLE Server
@@ -41,14 +46,14 @@ void ble_uart::init(char *device_name) {
 
   // Create a BLE Characteristic
   pTxCharacteristic = pService->createCharacteristic(
-    CHARACTERISTIC_UUID_TX,
-    BLECharacteristic::PROPERTY_NOTIFY);
+      CHARACTERISTIC_UUID_TX,
+      BLECharacteristic::PROPERTY_NOTIFY);
 
   pTxCharacteristic->addDescriptor(new BLE2902());
 
   BLECharacteristic *pRxCharacteristic = pService->createCharacteristic(
-    CHARACTERISTIC_UUID_RX,
-    BLECharacteristic::PROPERTY_WRITE);
+      CHARACTERISTIC_UUID_RX,
+      BLECharacteristic::PROPERTY_WRITE);
 
   pRxCharacteristic->setCallbacks(new MyCallbacks());
 
@@ -59,23 +64,28 @@ void ble_uart::init(char *device_name) {
   pServer->getAdvertising()->start();
 }
 
-void ble_uart::task() {
-  while (1) {
+void ble_uart::task()
+{
+  while (1)
+  {
     // disconnecting
-    if (!deviceConnected && oldDeviceConnected) {
-      vTaskDelay(500 / portTICK_RATE_MS);  // give the bluetooth stack the chance to get things ready
-      pServer->startAdvertising();         // restart advertising
-      //Serial.println("start advertising");
+    if (!deviceConnected && oldDeviceConnected)
+    {
+      vTaskDelay(500 / portTICK_RATE_MS); // give the bluetooth stack the chance to get things ready
+      pServer->startAdvertising();        // restart advertising
+      // Serial.println("start advertising");
       oldDeviceConnected = deviceConnected;
     }
     // connecting
-    if (deviceConnected && !oldDeviceConnected) {
+    if (deviceConnected && !oldDeviceConnected)
+    {
       // do stuff here on connecting
       oldDeviceConnected = deviceConnected;
     }
   }
 }
 
-bool ble_uart::get_deviceConnected() {
+bool ble_uart::get_deviceConnected()
+{
   return deviceConnected;
 }

@@ -8,7 +8,7 @@ draw_led led;
 
 void setup() {
   Serial.begin(115200);
-  //while (!Serial) delay(1);
+  while (!Serial) delay(1);
 
   ble.init("kmr-m6-01");
 
@@ -18,16 +18,30 @@ void setup() {
 }
 
 void loop() {
+  while (1) {
+    if (!ble.get_deviceConnected()) {
+      led.set_mode(BLUE, BLINK);
+    } else {
+      led.set_mode(GREEN, LIT);
+      ics.set_motion();
+      break;
+    }
+  }
+  /*
   if (!ble.get_deviceConnected()) {
     led.set_mode(BLUE, BLINK);
   } else {
     led.set_mode(GREEN, LIT);
   }
 
-  /*
   ics.set_pos(6, 5000);
+  delay(1000);
+  ics.set_pos(4, 5000);
   delay(1000);
   ics.set_pos(6, 10000);
   delay(1000);
+  ics.set_pos(4, 10000);
+  delay(1000);
   */
+  delay(1)
 }
