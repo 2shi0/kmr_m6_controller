@@ -20,12 +20,12 @@ void ard_ics::set_pos(unsigned char id, int pos)
   {
     Serial1.write(i);
   }
-  vTaskDelay(500 / portTICK_RATE_MS);
 }
 
 void ard_ics::set_motion()
 {
-  for (int i = 0; i < sizeof(motion_data_home)/sizeof(motion_data_home[0]); i++)
+  
+  for (unsigned char i = 0; i < sizeof(motion_data_home)/sizeof(motion_data_home[0]); i++)
   {
     set_pos(i, motion_data_home[i]);
   }

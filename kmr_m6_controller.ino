@@ -16,12 +16,16 @@ void setup() {
 
   led.create_task("led_task");
 
+  delay(1000);
+
+  ics.set_motion();
+
+
   while (1) {
     if (!ble.get_deviceConnected()) {
       led.set_mode(BLUE, BLINK);
     } else {
       led.set_mode(GREEN, LIT);
-      ics.set_motion();
       break;
     }
   }
