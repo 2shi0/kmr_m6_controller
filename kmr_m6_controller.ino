@@ -7,16 +7,14 @@ ble_uart ble;
 draw_led led;
 
 void setup() {
+  led.create_task("led_task");
+
   Serial.begin(115200);
   //while (!Serial) delay(1);
 
   ble.init("kmr-m6-01");
 
   ble.create_task("ble_task");
-
-  led.create_task("led_task");
-
-  delay(1000);
 
   ics.set_speed(64);
 
@@ -27,7 +25,7 @@ void setup() {
     if (!ble.get_deviceConnected()) {
       led.set_mode(BLUE, BLINK);
     } else {
-      led.set_mode(GREEN, LIT);
+      led.set_mode(WHITE, LIT);
       break;
     }
   }

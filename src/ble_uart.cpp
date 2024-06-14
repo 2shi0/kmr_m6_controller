@@ -5,6 +5,7 @@ bool oldDeviceConnected;
 
 ble_uart::ble_uart()
 {
+  newest_rx_value = NULL;
 }
 void ble_uart::MyServerCallbacks::onConnect(BLEServer *pServer)
 {
@@ -14,6 +15,11 @@ void ble_uart::MyServerCallbacks::onConnect(BLEServer *pServer)
 void ble_uart::MyServerCallbacks::onDisconnect(BLEServer *pServer)
 {
   deviceConnected = false;
+}
+
+void ble_uart::set_newest_rx_value(char a)
+{
+  newest_rx_value = a;
 }
 
 void ble_uart::MyCallbacks::onWrite(BLECharacteristic *pCharacteristic)

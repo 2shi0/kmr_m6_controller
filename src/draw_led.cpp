@@ -3,6 +3,8 @@
 draw_led::draw_led() {
   current_color = BLUE;
   current_mode = 0;
+
+  set_mode(RED,LIT);
 }
 
 void draw_led::task() {

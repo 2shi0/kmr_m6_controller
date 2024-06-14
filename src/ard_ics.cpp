@@ -40,8 +40,28 @@ void ard_ics::set_speed(unsigned char speed)
 void ard_ics::set_motion()
 {
 
-  for (unsigned char i = 0; i < sizeof(motion_data_home) / sizeof(motion_data_home[0]); i++)
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
   {
-    set_pos(i, motion_data_home[i]*800 + leg_openings[i]*400);
+    set_pos(i, filter_sitting_height_neutral[i] * 800 + filter_leg_opening_neutral[i] * 400);
   }
+
+  delay(1000);
+
+  /* 足踏み
+  while (1)
+  {
+    for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+    {
+      set_pos(i, filter_sitting_height_neutral[i] * 800 + filter_leg_opening_neutral[i] * 400 + filter_leg_up_1[i] * 1600);
+    }
+
+    delay(500);
+
+    for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+    {
+      set_pos(i, filter_sitting_height_neutral[i] * 800 + filter_leg_opening_neutral[i] * 400 + filter_leg_up_2[i] * 1600);
+    }
+    delay(500);
+  }
+  */
 }

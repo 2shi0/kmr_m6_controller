@@ -8,6 +8,8 @@
 #define MOTION_FORWORD 1
 #define MOTION_BACK 2
 
+#define NUM_OF_SERVO 12
+
 class ard_ics : public task_maker
 {
 public:
@@ -18,8 +20,21 @@ public:
 
 private:
   unsigned char tx[3];
-  int motion_data_home[12] = {1, 0, -1, 0, 1, 0, -1, 0, 1, 0, -1, 0};
-  int leg_openings[12] = {0, -1, 0, 1, 0, 0, 0, -0, 0, 1, 0, -1};
+  int filter_sitting_height_neutral[NUM_OF_SERVO] = {1, 0, -1, 0, 1, 0, -1, 0, 1, 0, -1, 0};
+  int filter_leg_opening_neutral[NUM_OF_SERVO] = {0, -1, 0, 1, 0, 0, 0, -0, 0, 1, 0, -1};
+
+  int filter_leg_up_1[NUM_OF_SERVO] = {-1, 0, 0, 0,
+                                       0, 0, 1, 0,
+                                       -1, 0, 0, 0};
+  int filter_leg_up_2[NUM_OF_SERVO] = {0, 0, 1, 0,
+                                       -1, 0, 0, 0,
+                                       0, 0, 1, 0};
+  int filter_leg_forward_1[NUM_OF_SERVO] = {0, 1, 0, 0,
+                                            0, 0, 0, -1,
+                                            0, 1, 0, 0};
+  int filter_leg_forward_2[NUM_OF_SERVO] = {0, 0, 0, -1,
+                                            0, 1, 0, 0,
+                                            0, 0, 0, -1};
 };
 
 #endif

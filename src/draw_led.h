@@ -7,6 +7,7 @@
 #define BLACK 0
 #define GREEN 65280
 #define WHITE 16777215
+#define RED 16711680
 
 #define LIT 0
 #define BLINK 1

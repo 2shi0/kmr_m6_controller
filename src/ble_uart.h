@@ -29,7 +29,8 @@ private:
   class MyCallbacks : public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic);
   };
-
+  char newest_rx_value;
+  void set_newest_rx_value(char a);
   void task();
 };
 
