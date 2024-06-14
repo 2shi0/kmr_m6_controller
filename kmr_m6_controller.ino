@@ -18,6 +18,8 @@ void setup() {
 
   delay(1000);
 
+  ics.set_speed(64);
+
   ics.set_motion();
 
 
