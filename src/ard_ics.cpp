@@ -2,6 +2,10 @@
 
 ard_ics::ard_ics(uint8_t tx_pin)
 {
+  for (int i = 0; i < NUM_OF_SERVO; i++)
+  {
+    neutral[i] = filter_sitting_height_neutral[i] * 800 + filter_leg_opening_neutral[i] * 800;
+  }
   Serial1.begin(115200, SERIAL_8E1, -1, tx_pin);
   while (!Serial1)
     delay(1);
@@ -34,34 +38,93 @@ void ard_ics::set_speed(unsigned char speed)
       Serial1.write(i);
     }
   }
-  delay(100);
 }
 
-void ard_ics::set_motion()
+void ard_ics::task()
 {
+  while (1)
+  {
+   if(latest_rx=='n')motion_neutral();
+   else
+   if(latest_rx=='f')motion_forward();
+   else
+   if(latest_rx=='b')motion_back();
+
+  Serial.println(latest_rx);
+  }
+}
+
+void ard_ics::motion_neutral()
+{
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, -filter_sitting_height_neutral[i] * 800 + filter_leg_opening_neutral[i] * 400);
+  }
+  vTaskDelay(d / portTICK_RATE_MS);
+}
+
+void ard_ics::motion_back()
+{
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, neutral[i] + filter_leg_forward_1[i] * 400 + filter_leg_forward_2[i] * -400 + filter_leg_up_1[i] * 800);
+  }
+  vTaskDelay(d / portTICK_RATE_MS);
+  if (latest_rx != 'b')
+    return;
 
   for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
   {
-    set_pos(i, filter_sitting_height_neutral[i] * 800 + filter_leg_opening_neutral[i] * 400);
+    set_pos(i, neutral[i] + filter_leg_forward_1[i] * -400 + filter_leg_forward_2[i] * 400 + filter_leg_up_1[i] * 800);
   }
+  vTaskDelay(d / portTICK_RATE_MS);
+  if (latest_rx != 'b')
+    return;
 
-  delay(1000);
-
-  /* 足踏み
-  while (1)
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
   {
-    for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-    {
-      set_pos(i, filter_sitting_height_neutral[i] * 800 + filter_leg_opening_neutral[i] * 400 + filter_leg_up_1[i] * 1600);
-    }
-
-    delay(500);
-
-    for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-    {
-      set_pos(i, filter_sitting_height_neutral[i] * 800 + filter_leg_opening_neutral[i] * 400 + filter_leg_up_2[i] * 1600);
-    }
-    delay(500);
+    set_pos(i, neutral[i] + filter_leg_forward_1[i] * -400 + filter_leg_forward_2[i] * 400 + filter_leg_up_2[i] * 800);
   }
-  */
+  vTaskDelay(d / portTICK_RATE_MS);
+  if (latest_rx != 'b')
+    return;
+
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, neutral[i] + filter_leg_forward_1[i] * 400 + filter_leg_forward_2[i] * -400 + filter_leg_up_2[i] * 800);
+  }
+  vTaskDelay(d / portTICK_RATE_MS);
+}
+
+void ard_ics::motion_forward()
+{
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, neutral[i] + filter_leg_forward_1[i] * -400 + filter_leg_forward_2[i] * 400 + filter_leg_up_1[i] * 800);
+  }
+  vTaskDelay(d / portTICK_RATE_MS);
+  if (latest_rx != 'f')
+    return;
+
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, neutral[i] + filter_leg_forward_1[i] * 400 + filter_leg_forward_2[i] * -400 + filter_leg_up_1[i] * 800);
+  }
+  vTaskDelay(d / portTICK_RATE_MS);
+  if (latest_rx != 'f')
+    return;
+
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, neutral[i] + filter_leg_forward_1[i] * 400 + filter_leg_forward_2[i] * -400 + filter_leg_up_2[i] * 800);
+  }
+  vTaskDelay(d / portTICK_RATE_MS);
+  if (latest_rx != 'f')
+    return;
+
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, neutral[i] + filter_leg_forward_1[i] * -400 + filter_leg_forward_2[i] * 400 + filter_leg_up_2[i] * 800);
+  }
+  vTaskDelay(d / portTICK_RATE_MS);
 }
