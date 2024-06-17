@@ -27,6 +27,8 @@ void setup() {
   delay(1000);
 
   ics.motion_forward();
+
+  led.set_mode(BLUE, LIT);
 }
 
 void loop() {
@@ -35,6 +37,10 @@ void loop() {
     ics.latest_rx = 'f';
   } else if (GamePad.isDownPressed()) {
     ics.latest_rx = 'b';
+  } else if (GamePad.isRightPressed()) {
+    ics.latest_rx = 'r';
+  } else if (GamePad.isLeftPressed()) {
+    ics.latest_rx = 'l';
   } else {
     ics.latest_rx = 'n';
   }

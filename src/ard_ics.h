@@ -21,6 +21,8 @@ public:
   void motion_forward();
   void motion_back();
   void motion_neutral();
+  void motion_turn_right();
+  void motion_turn_left();
 
 private:
   unsigned char tx[3];
@@ -41,7 +43,15 @@ private:
                                             0, -1, 0, 0,
                                             0, 0, 0, 1};
 
-  int d = 500;
+  int filter_leg_turn_right[NUM_OF_SERVO] = {0, -1, 0, 0,
+                                             0, 0, 0, -1,
+                                             0, -1, 0, 0};
+
+  int filter_leg_turn_left[NUM_OF_SERVO] = {0, 0, 0, 1,
+                                            0, 1, 0, 0,
+                                            0, 0, 0, 1};
+
+  int d = 300;
 };
 
 #endif

@@ -44,13 +44,18 @@ void ard_ics::task()
 {
   while (1)
   {
-   if(latest_rx=='n')motion_neutral();
-   else
-   if(latest_rx=='f')motion_forward();
-   else
-   if(latest_rx=='b')motion_back();
+    if (latest_rx == 'n')
+      motion_neutral();
+    else if (latest_rx == 'f')
+      motion_forward();
+    else if (latest_rx == 'b')
+      motion_back();
+    else if (latest_rx == 'r')
+      motion_turn_right();
+    else if (latest_rx == 'l')
+      motion_turn_left();
 
-  Serial.println(latest_rx);
+    Serial.println(latest_rx);
   }
 }
 
@@ -125,6 +130,56 @@ void ard_ics::motion_forward()
   for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
   {
     set_pos(i, neutral[i] + filter_leg_forward_1[i] * -400 + filter_leg_forward_2[i] * 400 + filter_leg_up_2[i] * 800);
+  }
+  vTaskDelay(d / portTICK_RATE_MS);
+}
+
+void ard_ics::motion_turn_right()
+{
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, neutral[i] + filter_leg_turn_right[i] * 800 + filter_leg_up_1[i] * 800);
+  }
+  vTaskDelay(d / portTICK_RATE_MS);
+  if (latest_rx != 'r')
+    return;
+
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, neutral[i] + filter_leg_turn_right[i] * 800);
+  }
+  vTaskDelay(d / portTICK_RATE_MS);
+  if (latest_rx != 'r')
+    return;
+
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, neutral[i] + filter_leg_up_2[i] * 800);
+  }
+  vTaskDelay(d / portTICK_RATE_MS);
+}
+
+void ard_ics::motion_turn_left() {
+
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, neutral[i] + filter_leg_turn_left[i] * 800 + filter_leg_up_2[i] * 800);
+  }
+  vTaskDelay(d / portTICK_RATE_MS);
+  if (latest_rx != 'l')
+    return;
+
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, neutral[i] + filter_leg_turn_left[i] * 800);
+  }
+  vTaskDelay(d / portTICK_RATE_MS);
+  if (latest_rx != 'l')
+    return;
+
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, neutral[i] + filter_leg_up_1[i] * 800);
   }
   vTaskDelay(d / portTICK_RATE_MS);
 }
