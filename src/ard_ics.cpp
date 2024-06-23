@@ -33,20 +33,6 @@ void ard_ics::set_pos(unsigned char id, int pos)
   }
 }
 
-void ard_ics::set_speed(unsigned char speed)
-{
-  tx[1] = 0x02;
-  tx[2] = constrain(speed, 0, 127);
-  for (unsigned char i = 0; i < 12; i++)
-  {
-    tx[0] = 0xC0 | i;
-    for (unsigned char i : tx)
-    {
-      Serial1.write(i);
-    }
-  }
-}
-
 void ard_ics::task()
 {
   while (1)

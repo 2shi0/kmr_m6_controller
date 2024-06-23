@@ -15,7 +15,6 @@ class ard_ics : public task_maker
 public:
   ard_ics(uint8_t tx_pin, unsigned char speed);
   void set_pos(unsigned char id, int pos);
-  void set_speed(unsigned char speed);
   void task();
   char latest_rx = 'z';
 

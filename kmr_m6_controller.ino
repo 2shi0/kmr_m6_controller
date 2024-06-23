@@ -4,11 +4,8 @@
 #include "src/ard_ics.h"
 #include "src/draw_led.h"
 
-
 ard_ics ics(21, 64);
 draw_led led;
-
-char rx_value = 's';
 
 void setup() {
   led.create_task("led_task");
