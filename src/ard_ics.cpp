@@ -1,14 +1,21 @@
 #include "ard_ics.h"
 
-ard_ics::ard_ics(uint8_t tx_pin)
+ard_ics::ard_ics(uint8_t tx_pin, unsigned char speed)
 {
-  for (int i = 0; i < NUM_OF_SERVO; i++)
-  {
-    neutral[i] = filter_sitting_height_neutral[i] * 800 + filter_leg_opening_neutral[i] * 800;
-  }
   Serial1.begin(115200, SERIAL_8E1, -1, tx_pin);
   while (!Serial1)
     delay(1);
+
+  tx[1] = 0x02;
+  tx[2] = constrain(speed, 0, 127);
+  for (unsigned char i = 0; i < 12; i++)
+  {
+    tx[0] = 0xC0 | i;
+    for (unsigned char i : tx)
+    {
+      Serial1.write(i);
+    }
+  }
 }
 
 void ard_ics::set_pos(unsigned char id, int pos)
@@ -44,6 +51,7 @@ void ard_ics::task()
 {
   while (1)
   {
+    /*
     if (latest_rx == 'n')
       motion_neutral();
     else if (latest_rx == 'f')
@@ -56,130 +64,7 @@ void ard_ics::task()
       motion_turn_left();
 
     Serial.println(latest_rx);
+    */
+    vTaskDelay(100 / portTICK_RATE_MS);
   }
-}
-
-void ard_ics::motion_neutral()
-{
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, -filter_sitting_height_neutral[i] * 800 + filter_leg_opening_neutral[i] * 400);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-}
-
-void ard_ics::motion_back()
-{
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_forward_1[i] * 400 + filter_leg_forward_2[i] * -400 + filter_leg_up_1[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-  if (latest_rx != 'b')
-    return;
-
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_forward_1[i] * -400 + filter_leg_forward_2[i] * 400 + filter_leg_up_1[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-  if (latest_rx != 'b')
-    return;
-
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_forward_1[i] * -400 + filter_leg_forward_2[i] * 400 + filter_leg_up_2[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-  if (latest_rx != 'b')
-    return;
-
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_forward_1[i] * 400 + filter_leg_forward_2[i] * -400 + filter_leg_up_2[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-}
-
-void ard_ics::motion_forward()
-{
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_forward_1[i] * -400 + filter_leg_forward_2[i] * 400 + filter_leg_up_1[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-  if (latest_rx != 'f')
-    return;
-
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_forward_1[i] * 400 + filter_leg_forward_2[i] * -400 + filter_leg_up_1[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-  if (latest_rx != 'f')
-    return;
-
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_forward_1[i] * 400 + filter_leg_forward_2[i] * -400 + filter_leg_up_2[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-  if (latest_rx != 'f')
-    return;
-
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_forward_1[i] * -400 + filter_leg_forward_2[i] * 400 + filter_leg_up_2[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-}
-
-void ard_ics::motion_turn_right()
-{
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_turn_right[i] * 800 + filter_leg_up_1[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-  if (latest_rx != 'r')
-    return;
-
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_turn_right[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-  if (latest_rx != 'r')
-    return;
-
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_up_2[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-}
-
-void ard_ics::motion_turn_left() {
-
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_turn_left[i] * 800 + filter_leg_up_2[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-  if (latest_rx != 'l')
-    return;
-
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_turn_left[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
-  if (latest_rx != 'l')
-    return;
-
-  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
-  {
-    set_pos(i, neutral[i] + filter_leg_up_1[i] * 800);
-  }
-  vTaskDelay(d / portTICK_RATE_MS);
 }

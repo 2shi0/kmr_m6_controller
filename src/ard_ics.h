@@ -13,45 +13,14 @@
 class ard_ics : public task_maker
 {
 public:
-  ard_ics(uint8_t tx_pin);
+  ard_ics(uint8_t tx_pin, unsigned char speed);
   void set_pos(unsigned char id, int pos);
-  void task();
   void set_speed(unsigned char speed);
+  void task();
   char latest_rx = 'z';
-  void motion_forward();
-  void motion_back();
-  void motion_neutral();
-  void motion_turn_right();
-  void motion_turn_left();
 
 private:
   unsigned char tx[3];
-  int filter_sitting_height_neutral[NUM_OF_SERVO] = {1, 0, -1, 0, 1, 0, -1, 0, 1, 0, -1, 0};
-  int filter_leg_opening_neutral[NUM_OF_SERVO] = {0, -1, 0, 1, 0, 0, 0, -0, 0, 1, 0, -1};
-
-  int neutral[NUM_OF_SERVO];
-  int filter_leg_up_1[NUM_OF_SERVO] = {1, 0, 0, 0,
-                                       0, 0, -1, 0,
-                                       1, 0, 0, 0};
-  int filter_leg_up_2[NUM_OF_SERVO] = {0, 0, -1, 0,
-                                       1, 0, 0, 0,
-                                       0, 0, -1, 0};
-  int filter_leg_forward_1[NUM_OF_SERVO] = {0, -1, 0, 0,
-                                            0, 0, 0, 1,
-                                            0, -1, 0, 0};
-  int filter_leg_forward_2[NUM_OF_SERVO] = {0, 0, 0, 1,
-                                            0, -1, 0, 0,
-                                            0, 0, 0, 1};
-
-  int filter_leg_turn_right[NUM_OF_SERVO] = {0, -1, 0, 0,
-                                             0, 0, 0, -1,
-                                             0, -1, 0, 0};
-
-  int filter_leg_turn_left[NUM_OF_SERVO] = {0, 0, 0, 1,
-                                            0, 1, 0, 0,
-                                            0, 0, 0, 1};
-
-  int d = 300;
 };
 
 #endif

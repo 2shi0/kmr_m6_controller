@@ -5,7 +5,7 @@
 #include "src/draw_led.h"
 
 
-ard_ics ics(21);
+ard_ics ics(21, 64);
 draw_led led;
 
 char rx_value = 's';
@@ -20,13 +20,7 @@ void setup() {
   Serial.begin(115200);
   //while (!Serial) delay(1);
 
-  ics.set_speed(64);
-
-  ics.motion_neutral();
-
   delay(1000);
-
-  ics.motion_forward();
 
   led.set_mode(BLUE, LIT);
 }
@@ -44,21 +38,4 @@ void loop() {
   } else {
     ics.latest_rx = 'n';
   }
-
-  /*
-  if (!ble.get_deviceConnected()) {
-    led.set_mode(BLUE, BLINK);
-  } else {
-    led.set_mode(GREEN, LIT);
-  }
-
-  ics.set_pos(6, 5000);
-  delay(1000);
-  ics.set_pos(4, 5000);
-  delay(1000);
-  ics.set_pos(6, 10000);
-  delay(1000);
-  ics.set_pos(4, 10000);
-  delay(1000);
-  */
 }
