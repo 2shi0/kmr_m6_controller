@@ -21,6 +21,7 @@ ard_ics::ard_ics(uint8_t tx_pin, unsigned char speed)
 void ard_ics::set_pos(unsigned char id, int pos)
 {
   id = constrain(id, 0, 31);
+  // 135度=4000 45度=1333
   pos = constrain(pos + 7500, 3500, 11500);
 
   tx[0] = 0x80 | id;
@@ -30,6 +31,13 @@ void ard_ics::set_pos(unsigned char id, int pos)
   for (unsigned char i : tx)
   {
     Serial1.write(i);
+  }
+}
+
+void ard_ics::set_all(int *pos){
+  for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
+  {
+    set_pos(i, pos[i]);
   }
 }
 
@@ -48,9 +56,8 @@ void ard_ics::task()
       motion_turn_right();
     else if (latest_rx == 'l')
       motion_turn_left();
-
+      bg
     Serial.println(latest_rx);
     */
-    vTaskDelay(100 / portTICK_RATE_MS);
   }
 }

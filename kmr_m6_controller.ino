@@ -20,6 +20,39 @@ void setup() {
   delay(1000);
 
   led.set_mode(BLUE, LIT);
+
+  int home[12] = { 0, 0, 0, 0,
+                   0, 0, 0, 0,
+                   0, 0, 0, 0 };
+  ics.set_all(home);
+
+  int f1[12] = { 1400, -600, 0, 0,
+                 0, 0, 600, -1400,
+                 1400, -600, 0, 0 };
+
+  int f2[12] = { 0, -600, 0, 0,
+                 0, 0, 600, 0,
+                 0, -600, 0, 0 };
+
+
+  int f3[12] = { 0, 0, 600, -1400,
+                 1400, -600, 0, 0,
+                 0, 0, 600, -1400 };
+
+  int f4[12] = { 0, 0, 600, 0,
+                 0, -600, 0, 0,
+                 0, 0, 600, 0 };
+
+  while (1) {
+    vTaskDelay(1000 / portTICK_RATE_MS);
+    ics.set_all(f1);
+    vTaskDelay(1000 / portTICK_RATE_MS);
+    ics.set_all(f2);
+    vTaskDelay(1000 / portTICK_RATE_MS);
+    ics.set_all(f3);
+    vTaskDelay(1000 / portTICK_RATE_MS);
+    ics.set_all(f4);
+  }
 }
 
 void loop() {
