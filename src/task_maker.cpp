@@ -1,6 +1,6 @@
 #include "task_maker.h"
 
-void task_maker::create_task(char *name)
+void task_maker::create_task(char *name, int priority)
 {
   xTaskCreate(
       [](void *this_pointer)
@@ -10,7 +10,7 @@ void task_maker::create_task(char *name)
       name,
       4096,
       this,
-      1,
+      priority,
       NULL);
 }
 

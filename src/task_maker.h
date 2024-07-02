@@ -4,7 +4,7 @@
 class task_maker
 {
 public:
-  void create_task(char *name);
+  void create_task(char *name, int priority);
   virtual void task();
 
 private:

@@ -34,15 +34,27 @@ void ard_ics::set_pos(unsigned char id, int pos)
   }
 }
 
-void ard_ics::set_all(int *pos){
+void ard_ics::set_all(int *pos)
+{
   for (unsigned char i = 0; i < NUM_OF_SERVO; i++)
   {
     set_pos(i, pos[i]);
+    vTaskDelay(1 / portTICK_RATE_MS);
   }
 }
 
 void ard_ics::task()
 {
+
+  int motion[4][12];
+  for (int i = 0; i < 12; i++)
+  {
+    motion[0][i] = leg_fw_1[i] - leg_fw_2[i] + leg_up_2[i];
+    motion[1][i] = -leg_fw_1[i] + leg_fw_2[i] + leg_up_2[i];
+    motion[2][i] = -leg_fw_1[i] + leg_fw_2[i] + leg_up_1[i];
+    motion[3][i] = leg_fw_1[i] - leg_fw_2[i] + leg_up_1[i];
+  }
+
   while (1)
   {
     /*
@@ -59,5 +71,11 @@ void ard_ics::task()
       bg
     Serial.println(latest_rx);
     */
+
+    for (auto &l : motion)
+    {
+      vTaskDelay(1000 / portTICK_RATE_MS);
+      set_all(l);
+    }
   }
 }
