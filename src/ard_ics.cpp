@@ -46,36 +46,98 @@ void ard_ics::set_all(int *pos)
 void ard_ics::task()
 {
 
-  int motion[4][12];
+  int motion_fw[4][12];
   for (int i = 0; i < 12; i++)
   {
-    motion[0][i] = leg_fw_1[i] - leg_fw_2[i] + leg_up_2[i];
-    motion[1][i] = -leg_fw_1[i] + leg_fw_2[i] + leg_up_2[i];
-    motion[2][i] = -leg_fw_1[i] + leg_fw_2[i] + leg_up_1[i];
-    motion[3][i] = leg_fw_1[i] - leg_fw_2[i] + leg_up_1[i];
+    motion_fw[0][i] = leg_fw_1[i] - leg_fw_2[i] + leg_up_2[i];
+    motion_fw[1][i] = -leg_fw_1[i] + leg_fw_2[i] + leg_up_2[i];
+    motion_fw[2][i] = -leg_fw_1[i] + leg_fw_2[i] + leg_up_1[i];
+    motion_fw[3][i] = leg_fw_1[i] - leg_fw_2[i] + leg_up_1[i];
+  }
+
+  int motion_bk[4][12];
+  for (int i = 0; i < 12; i++)
+  {
+    motion_bk[0][i] = -leg_fw_1[i] + leg_fw_2[i] + leg_up_2[i];
+    motion_bk[1][i] = leg_fw_1[i] - leg_fw_2[i] + leg_up_2[i];
+    motion_bk[2][i] = leg_fw_1[i] - leg_fw_2[i] + leg_up_1[i];
+    motion_bk[3][i] = -leg_fw_1[i] + leg_fw_2[i] + leg_up_1[i];
+  }
+
+  int motion_rt[4][12];
+  for (int i = 0; i < 12; i++)
+  {
+    motion_rt[0][i] = -leg_rt_1[i] - leg_rt_2[i] + leg_up_2[i];
+    motion_rt[1][i] = leg_rt_1[i] + leg_rt_2[i] + leg_up_2[i];
+    motion_rt[2][i] = leg_rt_1[i] + leg_rt_2[i] + leg_up_1[i];
+    motion_rt[3][i] = -leg_rt_1[i] - leg_rt_2[i] + leg_up_1[i];
+  }
+
+  int motion_lt[4][12];
+  for (int i = 0; i < 12; i++)
+  {
+    motion_lt[0][i] = leg_rt_1[i] + leg_rt_2[i] + leg_up_2[i];
+    motion_lt[1][i] = -leg_rt_1[i] - leg_rt_2[i] + leg_up_2[i];
+    motion_lt[2][i] = -leg_rt_1[i] - leg_rt_2[i] + leg_up_1[i];
+    motion_lt[3][i] = leg_rt_1[i] + leg_rt_2[i] + leg_up_1[i];
   }
 
   while (1)
   {
-    /*
+    vTaskDelay(1 / portTICK_RATE_MS);
+    // nutral
     if (latest_rx == 'n')
-      motion_neutral();
-    else if (latest_rx == 'f')
-      motion_forward();
-    else if (latest_rx == 'b')
-      motion_back();
-    else if (latest_rx == 'r')
-      motion_turn_right();
-    else if (latest_rx == 'l')
-      motion_turn_left();
-      bg
-    Serial.println(latest_rx);
-    */
-
-    for (auto &l : motion)
     {
-      vTaskDelay(1000 / portTICK_RATE_MS);
-      set_all(l);
+      set_all(leg_home);
+      continue;
+    }
+
+    // forward
+    if (latest_rx == 'f')
+    {
+      for (auto &l : motion_fw)
+      {
+        vTaskDelay(motion_delay / portTICK_RATE_MS);
+        set_all(l);
+        if (latest_rx != 'f')
+          continue;
+      }
+    }
+
+    // back
+    if (latest_rx == 'b')
+    {
+      for (auto &l : motion_bk)
+      {
+        vTaskDelay(motion_delay / portTICK_RATE_MS);
+        set_all(l);
+        if (latest_rx != 'b')
+          continue;
+      }
+    }
+
+    // right turn
+    if (latest_rx == 'r')
+    {
+      for (auto &l : motion_rt)
+      {
+        vTaskDelay(motion_delay / portTICK_RATE_MS);
+        set_all(l);
+        if (latest_rx != 'r')
+          continue;
+      }
+    }
+
+    // left turn
+    if (latest_rx == 'l')
+    {
+      for (auto &l : motion_lt)
+      {
+        vTaskDelay(motion_delay / portTICK_RATE_MS);
+        set_all(l);
+        if (latest_rx != 'l')
+          continue;
+      }
     }
   }
 }

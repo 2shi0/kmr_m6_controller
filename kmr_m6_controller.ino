@@ -26,13 +26,19 @@ void loop() {
   Dabble.processInput();
   if (GamePad.isUpPressed()) {
     ics.latest_rx = 'f';
-  } else if (GamePad.isDownPressed()) {
-    ics.latest_rx = 'b';
-  } else if (GamePad.isRightPressed()) {
-    ics.latest_rx = 'r';
-  } else if (GamePad.isLeftPressed()) {
-    ics.latest_rx = 'l';
-  } else {
-    ics.latest_rx = 'n';
+    return;
   }
+  if (GamePad.isDownPressed()) {
+    ics.latest_rx = 'b';
+    return;
+  }
+  if (GamePad.isRightPressed()) {
+    ics.latest_rx = 'r';
+    return;
+  }
+  if (GamePad.isLeftPressed()) {
+    ics.latest_rx = 'l';
+    return;
+  }
+  ics.latest_rx = 'n';
 }
