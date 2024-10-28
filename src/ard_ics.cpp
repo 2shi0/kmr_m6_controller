@@ -95,49 +95,24 @@ void ard_ics::task()
     // forward
     if (latest_rx == 'f')
     {
-      for (auto &l : motion_fw)
-      {
-        vTaskDelay(motion_delay / portTICK_RATE_MS);
-        set_all(l);
-        if (latest_rx != 'f')
-          continue;
-      }
+      // サイクル数指定
+      for (int i = 0; i < 10; i++)
+        for (auto &l : motion_fw)
+        {
+          vTaskDelay(motion_delay / portTICK_RATE_MS);
+          set_all(l);
+        }
     }
 
     // back
     if (latest_rx == 'b')
     {
-      for (auto &l : motion_bk)
-      {
-        vTaskDelay(motion_delay / portTICK_RATE_MS);
-        set_all(l);
-        if (latest_rx != 'b')
-          continue;
-      }
-    }
-
-    // right turn
-    if (latest_rx == 'r')
-    {
-      for (auto &l : motion_rt)
-      {
-        vTaskDelay(motion_delay / portTICK_RATE_MS);
-        set_all(l);
-        if (latest_rx != 'r')
-          continue;
-      }
-    }
-
-    // left turn
-    if (latest_rx == 'l')
-    {
-      for (auto &l : motion_lt)
-      {
-        vTaskDelay(motion_delay / portTICK_RATE_MS);
-        set_all(l);
-        if (latest_rx != 'l')
-          continue;
-      }
+      for (int i = 0; i < 10; i++)
+        for (auto &l : motion_bk)
+        {
+          vTaskDelay(motion_delay / portTICK_RATE_MS);
+          set_all(l);
+        }
     }
   }
 }
